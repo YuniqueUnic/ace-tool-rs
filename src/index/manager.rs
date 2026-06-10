@@ -211,7 +211,7 @@ impl IndexManager {
         let normalized = normalize_path(&project_root, runtime_env);
         let project_root = normalized.local;
 
-        let index_file_path = get_index_file_path(&project_root);
+        let index_file_path = get_index_file_path(&project_root, &config.index_bin);
 
         // Precompile exclude patterns to regex
         let compiled_patterns: Vec<(String, Option<Regex>)> = config

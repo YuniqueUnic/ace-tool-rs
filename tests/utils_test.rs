@@ -119,7 +119,7 @@ fn test_get_ace_dir_handles_gitignore_without_trailing_newline() {
 #[test]
 fn test_get_index_file_path() {
     let temp_dir = TempDir::new().unwrap();
-    let index_path = get_index_file_path(temp_dir.path());
+    let index_path = get_index_file_path(temp_dir.path(), "index.bin");
 
     assert_eq!(
         index_path,
@@ -133,8 +133,8 @@ fn test_get_index_file_path() {
 fn test_get_index_file_path_consistent() {
     let temp_dir = TempDir::new().unwrap();
 
-    let path1 = get_index_file_path(temp_dir.path());
-    let path2 = get_index_file_path(temp_dir.path());
+    let path1 = get_index_file_path(temp_dir.path(), "index.bin");
+    let path2 = get_index_file_path(temp_dir.path(), "index.bin");
 
     assert_eq!(path1, path2);
 }

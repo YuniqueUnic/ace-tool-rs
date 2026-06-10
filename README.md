@@ -86,6 +86,7 @@ ace-tool-rs --base-url <API_URL> --token <AUTH_TOKEN>
 | `--enhance-prompt` | Enhance a prompt and output the result to stdout, then exit |
 | `--max-lines-per-blob` | Maximum lines per blob chunk (default: 800) |
 | `--retrieval-timeout` | Search retrieval timeout in seconds (default: 180) |
+| `--index-bin` | Customize the index filename, default is `index.bin` (e.g. `index-1.bin` to isolate multiple instances) |
 
 ### Environment Variables
 

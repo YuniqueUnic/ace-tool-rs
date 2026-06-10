@@ -86,6 +86,7 @@ ace-tool-rs --base-url <API_URL> --token <AUTH_TOKEN>
 | `--enhance-prompt` | 增强提示词并输出到标准输出，然后退出 |
 | `--max-lines-per-blob` | 每个 blob 块的最大行数（默认：800） |
 | `--retrieval-timeout` | 搜索检索超时时间（秒，默认：180） |
+| `--index-bin` | 自定义索引文件名，默认为 `index.bin`（例如使用 `index-1.bin` 隔离不同的实例） |
 
 ### 环境变量
 

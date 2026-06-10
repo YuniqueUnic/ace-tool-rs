@@ -932,3 +932,83 @@ fn test_index_result_error() {
     assert_eq!(result.status, "error");
     assert!(result.stats.is_none());
 }
+
+#[test]
+fn test_multi_instance_isolation() {
+    let temp_dir = TempDir::new().unwrap();
+    let project_root = temp_dir.path().to_path_buf();
+
+    // Create two config instances with different index_bin values
+    let config1 = Config::new(
+        "https://api.example.com".to_string(),
+        "test-token".to_string(),
+        ConfigOptions {
+            index_bin: Some("index-1.bin".to_string()),
+            ..ConfigOptions::default()
+        },
+    )
+    .unwrap();
+
+    let config2 = Config::new(
+        "https://api.example.com".to_string(),
+        "test-token".to_string(),
+        ConfigOptions {
+            index_bin: Some("index-2.bin".to_string()),
+            ..ConfigOptions::default()
+        },
+    )
+    .unwrap();
+
+    // Create two managers
+    let manager1 = IndexManager::new(config1, project_root.clone()).unwrap();
+    let manager2 = IndexManager::new(config2, project_root.clone()).unwrap();
+
+    // Save different data in manager1
+    let mut index1 = IndexData {
+        version: 2,
+        config_hash: manager1.config_hash().to_string(),
+        entries: HashMap::new(),
+    };
+    index1.entries.insert(
+        "file1.rs".to_string(),
+        FileEntry {
+            mtime_secs: 1000,
+            mtime_nanos: 0,
+            size: 100,
+            blob_hashes: vec!["hash1".to_string()],
+        },
+    );
+    manager1.save_index(&index1).unwrap();
+
+    // Save different data in manager2
+    let mut index2 = IndexData {
+        version: 2,
+        config_hash: manager2.config_hash().to_string(),
+        entries: HashMap::new(),
+    };
+    index2.entries.insert(
+        "file2.rs".to_string(),
+        FileEntry {
+            mtime_secs: 2000,
+            mtime_nanos: 0,
+            size: 200,
+            blob_hashes: vec!["hash2".to_string()],
+        },
+    );
+    manager2.save_index(&index2).unwrap();
+
+    // Verify both files exist independently
+    let file1_path = project_root.join(".ace-tool").join("index-1.bin");
+    let file2_path = project_root.join(".ace-tool").join("index-2.bin");
+    assert!(file1_path.exists());
+    assert!(file2_path.exists());
+
+    // Load and verify data isolation
+    let loaded1 = manager1.load_index();
+    assert_eq!(loaded1.entries.len(), 1);
+    assert!(loaded1.entries.contains_key("file1.rs"));
+
+    let loaded2 = manager2.load_index();
+    assert_eq!(loaded2.entries.len(), 1);
+    assert!(loaded2.entries.contains_key("file2.rs"));
+}

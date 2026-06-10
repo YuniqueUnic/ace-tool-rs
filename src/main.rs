@@ -77,6 +77,10 @@ struct Args {
     /// Enhance a prompt and output the result to stdout, then exit
     #[arg(long)]
     enhance_prompt: Option<String>,
+
+    /// Customize the index.bin filename (default: "index.bin")
+    #[arg(long, default_value = "index.bin")]
+    index_bin: String,
 }
 
 #[tokio::main]
@@ -119,6 +123,7 @@ async fn main() -> Result<()> {
                             no_webbrowser_enhance_prompt: args.no_webbrowser_enhance_prompt,
                             force_xdg_open: args.force_xdg_open,
                             webui_addr: args.webui_addr.clone(),
+                            index_bin: Some(args.index_bin.clone()),
                         },
                     )?
                 }
@@ -151,6 +156,7 @@ async fn main() -> Result<()> {
                     no_webbrowser_enhance_prompt: args.no_webbrowser_enhance_prompt,
                     force_xdg_open: args.force_xdg_open,
                     webui_addr: args.webui_addr.clone(),
+                    index_bin: Some(args.index_bin.clone()),
                 },
             )?
         };
@@ -184,6 +190,7 @@ async fn main() -> Result<()> {
             no_webbrowser_enhance_prompt: args.no_webbrowser_enhance_prompt,
             force_xdg_open: args.force_xdg_open,
             webui_addr: args.webui_addr,
+            index_bin: Some(args.index_bin),
         },
     )?;
 

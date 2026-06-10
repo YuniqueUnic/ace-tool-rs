@@ -77,11 +77,13 @@ fn test_config_with_custom_values() {
             no_webbrowser_enhance_prompt: true,
             force_xdg_open: false,
             webui_addr: None,
+            index_bin: Some("custom-index.bin".to_string()),
         },
     )
     .unwrap();
     assert_eq!(config.max_lines_per_blob, 500);
     assert_eq!(config.retrieval_timeout_secs, 120);
+    assert_eq!(config.index_bin, "custom-index.bin");
     assert!(config.no_adaptive);
     assert!(config.no_webbrowser_enhance_prompt);
     assert_eq!(config.cli_overrides.upload_timeout_secs, Some(60));
